@@ -1,0 +1,47 @@
+
+
+#  find modular inverse of key under mod 26
+def mod_inverse(key, mod=26):
+    for i in range(1, mod):
+        if (key * i) % mod == 1:
+            return i
+    return None
+
+# Encryption
+def encrypt(text, key):
+    result = ""
+    for char in text.upper():
+        if char.isalpha():
+            p = ord(char) - 65           # Convert letter to number (A=0,...Z=25)
+            c = (p * key) % 26           # Encryption formula
+            result += chr(c + 65)        # Convert back to letter
+        else:
+            result += char               
+    return result
+
+# Decryption
+def decrypt(cipher, key):
+    result = ""
+    key_inv = mod_inverse(key, 26)       # Find inverse of key
+    if key_inv is None:
+        return " inverse doesn't  exists."
+    
+    for char in cipher.upper():
+        if char.isalpha():
+            c = ord(char) - 65
+            p = (c * key_inv) % 26       # Decryption formula
+            result += chr(p + 65)
+        else:
+            result += char
+    return result
+
+
+#example
+plain_text = "HELLO"
+key = 7   # Must be coprime with 26 (like 3, 5, 7, 11, etc.)
+
+cipher_text = encrypt(plain_text, key)
+print("Encrypted:", cipher_text)
+
+decrypted_text = decrypt(cipher_text, key)
+print("Decrypted:", decrypted_text)
